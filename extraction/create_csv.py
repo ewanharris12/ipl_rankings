@@ -145,14 +145,24 @@ bb['match_id'] = bb['match_id'].astype('int')
 bb['over'] = bb['over'].astype('int')
 bb['ball'] = bb['ball'].astype('int')
 
+# Remove extra columns
+bb.drop(columns=['Over','Over_and_ball'], inplace=True)
+
 # Remove cricsheet filled values, replace with nulls
-bb['Kind_of_wicket'] = np.where(bb['Extra_type']=='-', None, bb['Extra_type'])
+bb['Extra_type'] = np.where(bb['Extra_type']=='-', None, bb['Extra_type'])
 bb['Kind_of_wicket'] = np.where(bb['Kind_of_wicket']==0, None, bb['Kind_of_wicket'])
 bb['Dismissed_player'] = np.where(bb['Dismissed_player']==0, None, bb['Dismissed_player'])
 
 # rename some of the columns
 bb.rename(columns={'Kind_of_wicket':'wicket_type',
+                    'Runs_off_bat':'runs',
+                    'Batsman':'batter',
+                    'Non-striker':'non_striker',
+                    'Bowler':'bowler',
+                    'Extras':'extras',
+                    'Total':'total',
                   'Dismissed_player':'player_out',
+                  'Innings_number':'innings',
                   'Extra_type':'extra_type'}, inplace=True)
 
 # Don't want run outs etc to count towards bowling stats
